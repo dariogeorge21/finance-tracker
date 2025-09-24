@@ -15,6 +15,24 @@
     --background-end-rgb: 0, 0, 0;
   }
 }
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: linear-gradient(to right, #e6f2ed, #eaf3fa);
+  min-height: 100vh; /* ensures background covers full viewport */
+  display: flex;
+  flex-direction: column;
+}
+
+#__next {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 
 @layer base {
   :root {
