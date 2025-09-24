@@ -2,8 +2,6 @@
 
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -14,16 +12,14 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { toast } from 'sonner'
 import { Income } from '@/types'
 
-const incomeSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  phone_number: z.string().optional(),
-  amount: z.number().min(0.01, 'Amount must be greater than 0'),
-  description: z.string().optional(),
-  date: z.string().min(1, 'Date is required'),
-  called_status: z.boolean().default(false),
-})
-
-type IncomeFormData = z.infer<typeof incomeSchema>
+interface IncomeFormData {
+  name: string;
+  phone_number?: string;
+  amount: number;
+  description?: string;
+  date: string;
+  called_status: boolean;
+}
 
 interface IncomeFormProps {
   isOpen: boolean
@@ -37,7 +33,6 @@ export function IncomeForm({ isOpen, onClose, onSuccess, projectId, editData }: 
   const [isLoading, setIsLoading] = useState(false)
   
   const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<IncomeFormData>({
-    resolver: zodResolver(incomeSchema),
     defaultValues: editData ? {
       name: editData.name,
       phone_number: editData.phone_number || '',
@@ -103,7 +98,9 @@ export function IncomeForm({ isOpen, onClose, onSuccess, projectId, editData }: 
             <Input
               id="name"
               placeholder="John Doe"
-              {...register('name')}
+              {...register('name', { 
+                required: 'Name is required' 
+              })}
             />
             {errors.name && (
               <p className="text-sm text-destructive">{errors.name.message}</p>
@@ -127,7 +124,14 @@ export function IncomeForm({ isOpen, onClose, onSuccess, projectId, editData }: 
                 type="number"
                 step="0.01"
                 placeholder="5000.00"
-                {...register('amount', { valueAsNumber: true })}
+                {...register('amount', { 
+                  required: 'Amount is required',
+                  valueAsNumber: true,
+                  min: {
+                    value: 0.01,
+                    message: 'Amount must be greater than 0'
+                  }
+                })}
               />
               {errors.amount && (
                 <p className="text-sm text-destructive">{errors.amount.message}</p>
@@ -139,7 +143,9 @@ export function IncomeForm({ isOpen, onClose, onSuccess, projectId, editData }: 
               <Input
                 id="date"
                 type="date"
-                {...register('date')}
+                {...register('date', { 
+                  required: 'Date is required' 
+                })}
               />
               {errors.date && (
                 <p className="text-sm text-destructive">{errors.date.message}</p>
@@ -157,16 +163,16 @@ export function IncomeForm({ isOpen, onClose, onSuccess, projectId, editData }: 
             />
           </div>
           
-          <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2">
             <Checkbox
               id="called_status"
               checked={calledStatus}
-              onCheckedChange={(checked) => setValue('called_status', !!checked)}
+              onCheckedChange={(checked: boolean | 'indeterminate') => setValue('called_status', !!checked)}
             />
             <Label htmlFor="called_status" className="text-sm font-normal">
               Mark as called/contacted
             </Label>
-          </div>
+            </div>
           
           <div className="flex space-x-2 pt-4">
             <Button type="button" variant="outline" onClick={handleClose} className="flex-1">
