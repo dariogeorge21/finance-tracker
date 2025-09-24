@@ -6,6 +6,13 @@ import { formatCurrency } from '@/lib/currency'
 import { ProjectStats } from '@/types'
 import * as React from 'react'
 
+// Type assertion for ResponsiveContainer to fix compatibility issues
+const TypedResponsiveContainer = ResponsiveContainer as React.FC<{
+  width?: string | number;
+  height?: string | number;
+  children?: React.ReactNode;
+}>
+
 interface FinancialChartsProps {
   stats: ProjectStats
 }
@@ -35,8 +42,7 @@ export function FinancialCharts({ stats }: FinancialChartsProps) {
         </CardHeader>
         <CardContent>
           <div className="h-64">
-            {/* @ts-ignore - Type issues with ResponsiveContainer */}
-            <ResponsiveContainer width="100%" height="100%">
+            <TypedResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={pieData}
@@ -53,7 +59,7 @@ export function FinancialCharts({ stats }: FinancialChartsProps) {
                 </Pie>
                 <Tooltip formatter={(value) => formatCurrency(value as number)} />
               </PieChart>
-            </ResponsiveContainer>
+            </TypedResponsiveContainer>
           </div>
         </CardContent>
       </Card>
@@ -64,8 +70,7 @@ export function FinancialCharts({ stats }: FinancialChartsProps) {
         </CardHeader>
         <CardContent>
           <div className="h-64">
-            {/* @ts-ignore - Type issues with ResponsiveContainer */}
-            <ResponsiveContainer width="100%" height="100%">
+            <TypedResponsiveContainer width="100%" height="100%">
               <BarChart data={barData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
@@ -76,7 +81,7 @@ export function FinancialCharts({ stats }: FinancialChartsProps) {
                 <Bar dataKey="Expenses" fill="#EF4444" name="Expenses" />
                 <Bar dataKey="Balance" fill={stats.netBalance >= 0 ? '#3B82F6' : '#F59E0B'} name="Net Balance" />
               </BarChart>
-            </ResponsiveContainer>
+            </TypedResponsiveContainer>
           </div>
         </CardContent>
       </Card>
