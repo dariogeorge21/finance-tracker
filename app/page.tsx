@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic'
 async function getProjects() {
   const { data: projects, error } = await supabase
     .from('projects')
-    .select('id, project_name, created_at')
+    .select('id, project_name, created_at, password_hash, updated_at')
     .order('created_at', { ascending: false })
 
   if (error) {
