@@ -22,7 +22,6 @@ html, body {
 }
 
 body {
-  background: linear-gradient(to right, #e6f2ed, #eaf3fa);
   min-height: 100vh; /* ensures background covers full viewport */
   display: flex;
   flex-direction: column;
