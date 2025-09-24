@@ -8,7 +8,7 @@ import { Toaster } from '@/components/ui/sonner';
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Finance Tracker - Multi-Tenant Workspace',
+  title: 'Finance Tracker Workspace',
   description: 'Secure, password-protected finance tracking workspaces for managing income and expenses with real-time analytics.',
   keywords: 'finance, tracker, budget, income, expenses, analytics, workspace',
 }
@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <Toaster richColors position="top-right" />
-      <main className="flex-grow">{children}</main>
+      <main className="flex-grow h-full">{children}</main>
       <Footer />
     </div>
   );
