@@ -2,7 +2,15 @@
 
 import * as React from 'react';
 import * as RechartsPrimitive from 'recharts';
+import { ResponsiveContainer } from 'recharts';
 import { clsx } from 'clsx';
+
+// Type assertion for ResponsiveContainer to fix compatibility issues
+const TypedResponsiveContainer = ResponsiveContainer as React.FC<{
+  width?: string | number;
+  height?: string | number;
+  children?: React.ReactNode;
+}>;
 
 // Utility function for combining class names (compatible with Mantine)
 function cn(...classes: Parameters<typeof clsx>): string {
@@ -79,9 +87,7 @@ const ChartContainer = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<'div'> & {
     config: ChartConfig;
-    children: React.ComponentProps<
-      typeof RechartsPrimitive.ResponsiveContainer
-    >['children'];
+    children: React.ReactNode;
     errorFallback?: React.ReactNode;
   }
 >(({ id, className, children, config, errorFallback, ...props }, ref) => {
@@ -129,9 +135,9 @@ const ChartContainer = React.forwardRef<
           {...props}
         >
           <ChartStyle id={chartId} config={validatedConfig} />
-          <RechartsPrimitive.ResponsiveContainer>
+          <TypedResponsiveContainer width="100%" height="100%">
             {children}
-          </RechartsPrimitive.ResponsiveContainer>
+          </TypedResponsiveContainer>
         </div>
       </ChartContext.Provider>
     </ChartErrorBoundary>
@@ -385,10 +391,36 @@ const ChartYAxis = RechartsPrimitive.YAxis;
 
 const ChartLegend = RechartsPrimitive.Legend;
 
+// Define necessary types that aren't properly exported from Recharts
+type LegendType = 
+  | 'plainline' 
+  | 'line' 
+  | 'square' 
+  | 'rect'
+  | 'circle' 
+  | 'cross'
+  | 'diamond'
+  | 'star'
+  | 'triangle'
+  | 'wye'
+  | 'none';
+
+// Define LegendPayload interface since it's not exported from Recharts
+interface LegendPayload {
+  value: any;
+  id?: string;
+  type?: LegendType;
+  color?: string;
+  payload?: any;
+  dataKey?: string | number;
+  name?: string;
+  inactive?: boolean;
+}
+
 const ChartLegendContent = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<'div'> & {
-    payload?: Array<RechartsPrimitive.LegendPayload>;
+    payload?: Array<LegendPayload>;
     verticalAlign?: 'top' | 'middle' | 'bottom';
     onMouseEnter?: RechartsPrimitive.LegendProps['onMouseEnter'];
     onMouseLeave?: RechartsPrimitive.LegendProps['onMouseLeave'];
