@@ -20,7 +20,7 @@ const incomeSchema = z.object({
   amount: z.number().min(0.01, 'Amount must be greater than 0'),
   description: z.string().optional(),
   date: z.string().min(1, 'Date is required'),
-  called_status: z.boolean().default(false),
+  called_status: z.boolean(),
 })
 
 type IncomeFormData = z.infer<typeof incomeSchema>
